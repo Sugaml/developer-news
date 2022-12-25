@@ -6,14 +6,24 @@ package graph
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/Sugaml/developer-news/graph/generated"
 	"github.com/Sugaml/developer-news/graph/model"
+	"github.com/Sugaml/developer-news/internal/links"
 )
 
 // CreateLink is the resolver for the createLink field.
 func (r *mutationResolver) CreateLink(ctx context.Context, input model.NewLink) (*model.Link, error) {
-	panic(fmt.Errorf("not implemented: CreateLink - createLink"))
+	fmt.Println(input)
+	var link links.Link
+	var user model.User
+	link.Address = input.Address
+	link.Title = input.Title
+	user.Name = "test"
+	fmt.Print(link)
+	linkId := link.Save()
+	return &model.Link{ID: strconv.FormatUint(uint64(linkId), 10), Title: link.Title, Address: link.Address}, nil
 }
 
 // CreateUser is the resolver for the createUser field.
@@ -36,7 +46,7 @@ func (r *queryResolver) Links(ctx context.Context) ([]*model.Link, error) {
 	var links []*model.Link
 	dummyLink := model.Link{
 		Title:   "our dummy link",
-		Address: "https://address.org",
+		Address: "kathmandu",
 		User:    &model.User{Name: "admin"},
 	}
 	links = append(links, &dummyLink)
